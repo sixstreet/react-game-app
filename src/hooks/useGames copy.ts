@@ -14,13 +14,12 @@ export interface Game {
   background_image: string;
   parent_platforms: { platform: Platform }[];
   metacritic: number;
-  rating_top: number;
 }
 
 const useGames = (gameQuery: GameQuery) =>
   useQuery<FetchResponse<Game>, Error>({
     queryKey: ["games", gameQuery],
-    queryFn: () =>
+    queryFn: () => {
       apiClient
         .get<FetchResponse<Game>>("/games", {
           params: {
@@ -30,8 +29,8 @@ const useGames = (gameQuery: GameQuery) =>
             search: gameQuery.searchText,
           },
         })
-        .then((resp) => resp.data),
-    staleTime: 24 * 60 * 60 * 1000, // 24 hours
+        .then((resp) => resp.data);
+    },
   });
 
 export default useGames;
